@@ -18,25 +18,34 @@ const budgetRoutes = require("./routes/budgetRoutes");
 
 const app = express();
 
+import express from 'express';
+import cors from 'cors';
+
+const app = express();
+
 const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:3000",
-  process.env.CLIENT_URL, // e.g. https://your-app.vercel.app
-].filter(Boolean);
+  'https://money-webapp-client.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
+    origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps, curl, or Postman)
       if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+        return callback(null, true);
       }
+      return callback(new Error('Blocked by CORS'));
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
+// Crucial: Handle preflight (OPTIONS) requests explicitly
+app.options('*', cors());
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
