@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const passport = require("./config/passport");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
 
@@ -15,10 +16,6 @@ const noteRoutes = require("./routes/noteRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const budgetRoutes = require("./routes/budgetRoutes");
-
-const app = express();
-
-import cors from 'cors';
 
 const app = express();
 
@@ -43,12 +40,11 @@ app.use(
   })
 );
 
-// Crucial: Handle preflight (OPTIONS) requests explicitly
+// Handle preflight (OPTIONS) requests explicitly
 app.options('*', cors());
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
-const path = require("path");
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(passport.initialize());
 
